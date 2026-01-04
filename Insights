@@ -1,0 +1,56 @@
+create table Zepto (
+	SKU_id SERIAL PRIMARY KEY,
+	Category VARCHAR (255),
+	Name VARCHAR (255) NOT NULL,
+	MRP NUMERIC,
+	Discout_Percent NUMERIC,
+	Avilable_Quantity INTEGER,
+	Discounted_Selling_Price NUMERIC,
+	Weight_in_Grams INTEGER,
+	Out_of_Stock BOOLEAN,
+	Quantity INTEGER
+);
+
+select COUNT(*) from Zepto;
+
+select * from Zepto 
+WHERE 
+	Category is null or
+	Name is null or
+	MRP is null or
+	Discout_Percent is null or
+	Avilable_Quantity is null or
+	Discounted_Selling_Price is null or
+	Weight_in_Grams is null or
+	Out_of_Stock is null or
+	Quantity is null;
+
+select distinct Category as All_Categories 
+	from Zepto 
+	order by Category;
+
+select Out_of_Stock ,count(*) as product_count 
+	from Zepto 
+	group by Out_of_Stock;
+
+select Name,count(SKU_id) as number_of_sku 
+	from Zepto
+	group by Name
+	having count(SKU_id) > 1
+	order by number_of_sku desc;
+
+select * from Zepto where MRP = 0 or Discounted_Selling_Price = 0;
+
+delete from Zepto where MRP = 0;
+
+update Zepto set MRP = MRP/100.0,Discounted_Selling_Price = Discounted_Selling_Price/100.0;
+
+select distinct Name,MRP,Discout_Percent from Zepto order by Discout_Percent desc limit 10;
+
+select distinct Name,MRP from Zepto where Out_of_Stock = True and MRP > 300 order by MRP desc;
+
+select max(MRP) from Zepto;
+
+select Category,sum(Discounted_Selling_Price * Avilable_Quantity) as Total_Revenue from Zepto 
+	group by Category 
+	order by Total_Revenue desc;
