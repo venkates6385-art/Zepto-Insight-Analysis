@@ -1,3 +1,4 @@
+# CREATING TABLE AS PER DATASET
 create table Zepto (
 	SKU_id SERIAL PRIMARY KEY,
 	Category VARCHAR (255),
@@ -10,6 +11,8 @@ create table Zepto (
 	Out_of_Stock BOOLEAN,
 	Quantity INTEGER
 );
+
+# IMPORTED THE DATA FROM CSV
 
 select COUNT(*) from Zepto;
 
@@ -25,32 +28,42 @@ WHERE
 	Out_of_Stock is null or
 	Quantity is null;
 
+# GIVES UNIQUE CATEGORIES
 select distinct Category as All_Categories 
 	from Zepto 
 	order by Category;
 
+# GIVES OUT OF STOCK COUNT
 select Out_of_Stock ,count(*) as product_count 
 	from Zepto 
 	group by Out_of_Stock;
 
+# FINDING DUPLICATE NAMES
 select Name,count(SKU_id) as number_of_sku 
 	from Zepto
 	group by Name
 	having count(SKU_id) > 1
 	order by number_of_sku desc;
 
+# FINDING PRICE ERRORS
 select * from Zepto where MRP = 0 or Discounted_Selling_Price = 0;
 
+# CLEANING PRICE ERRORS
 delete from Zepto where MRP = 0;
 
+# UPDATING PRICE 
 update Zepto set MRP = MRP/100.0,Discounted_Selling_Price = Discounted_Selling_Price/100.0;
 
+# TOP 10 DISCOUNTED PRODUCTS
 select distinct Name,MRP,Discout_Percent from Zepto order by Discout_Percent desc limit 10;
 
+# FINDING STOCK AVAILABILTY
 select distinct Name,MRP from Zepto where Out_of_Stock = True and MRP > 300 order by MRP desc;
 
+# TOP PRICE 
 select max(MRP) from Zepto;
 
+# CATEGORY WISE REVENUE
 select Category,sum(Discounted_Selling_Price * Avilable_Quantity) as Total_Revenue from Zepto 
 	group by Category 
 	order by Total_Revenue desc;
